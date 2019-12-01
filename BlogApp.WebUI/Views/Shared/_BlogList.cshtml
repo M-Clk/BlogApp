@@ -1,18 +1,23 @@
 ﻿@model IEnumerable<Blog>
-
-
-@foreach (var item in Model)
+@if (Model.Count()>0)
 {
-    <div class="card mb-2">
-        <div class="card-header">
-            @item.Title
-        </div>
-        <img class="card-img-top" src="~/img/@item.Image" alt="Card image cap">
+    @foreach (var item in Model)
+    {
+        <div class="card mb-2">
+            <div class="card-header">
+                @item.Title
+            </div>
+            <img class="card-img-top" src="~/img/@item.Image" alt="Card image cap">
 
-        <div class="card-block">
-            <h4 class="card-title">@item.Title</h4>
-            <p class="card-text">@item.Description</p>
-            <a asp-controller="Blog" asp-action="Details" asp-route-id="@item.BlogId" class="btn btn-primary">Block Details</a>
+            <div class="card-block">
+                <h4 class="card-title">@item.Title</h4>
+                <p class="card-text">@item.Description</p>
+                <a asp-controller="Blog" asp-action="Details" asp-route-id="@item.BlogId" class="btn btn-primary">Block Details</a>
+            </div>
         </div>
-    </div>
+    }
+}
+else
+{
+<div class="alert alert-warning">Kayit yok.</div>
 }

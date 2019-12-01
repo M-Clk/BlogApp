@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using BlogApp.Data.Abstract;
 using BlogApp.Entity;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 
 namespace BlogApp.WebUI.Controllers
 {
@@ -25,9 +26,17 @@ namespace BlogApp.WebUI.Controllers
         {
             return View(_blogRepository.GetById(id));
         }
-        public IActionResult Index()
+        public IActionResult Index(int? id, string q)
         {
-            return View(_blogRepository.GetAll().Where(i => i.isApproved).OrderByDescending(i => i.Date));
+            var query = _blogRepository.GetAll().Where(i => i.isApproved);
+            if (id != null)
+                query = query.Where(i => i.CategoryId == id);
+            if(!string.IsNullOrEmpty(q))
+            {
+                query = query.Where(i => EF.Functions.Like(i.Title,"%"+q+"%") || EF.Functions.Like(i.Body, "%" + q + "%") || EF.Functions.Like(i.Description, "%" + q + "%"));
+            }
+
+            return View(query.OrderByDescending(i => i.Date));
         }
 
         public IActionResult List()
@@ -68,8 +77,8 @@ namespace BlogApp.WebUI.Controllers
         public IActionResult Delete(int id)
         {
             return View(_blogRepository.GetById(id));
-        } 
-[HttpPost, ActionName("Delete")]
+        }
+        [HttpPost, ActionName("Delete")]
         public IActionResult DeleteConfirmed(int blogId)
         {
             _blogRepository.DeleteBlog(blogId);

@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Configuration;
-using BlogApp.Data.Concreta.EfCore;
+using BlogApp.Data.Concrete.EfCore;
 using Microsoft.EntityFrameworkCore;
 using BlogApp.Data.Abstract;
 

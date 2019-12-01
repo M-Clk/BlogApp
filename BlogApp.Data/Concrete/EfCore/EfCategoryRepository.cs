@@ -1,24 +1,25 @@
 ﻿using BlogApp.Data.Abstract;
-using BlogApp.Entity;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
+using BlogApp.Entity;
+using System.Linq;
 
-namespace BlogApp.Data.Concreta.EfCore
+namespace BlogApp.Data.Concrete.EfCore
 {
     public class EfCategoryRepository : ICategoryRepository
     {
         private BlogContext context;
 
-        public EfCategoryRepository(BlogContext context)
+        public EfCategoryRepository(BlogContext _context)
         {
-            this.context = context;
+            context = _context;
         }
 
         public void AddCategory(Category entity)
         {
             context.Categories.Add(entity);
+            context.SaveChanges();
         }
 
         public void DeleteCategory(int categoryId)
@@ -39,6 +40,24 @@ namespace BlogApp.Data.Concreta.EfCore
         public Category GetById(int categoryId)
         {
             return context.Categories.FirstOrDefault(p => p.CategoryId == categoryId);
+        }
+
+        public void SaveCategory(Category entity)
+        {
+            if (entity.CategoryId == 0)
+            {
+                context.Categories.Add(entity);
+            }
+            else
+            {
+                var category = GetById(entity.CategoryId);
+                if (category != null)
+                {
+                    category.Name = entity.Name;                   
+                }
+            }
+
+            context.SaveChanges();
         }
 
         public void UpdateCategory(Category entity)

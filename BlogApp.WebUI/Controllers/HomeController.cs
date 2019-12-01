@@ -2,26 +2,30 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using BlogApp.Data.Abstract;
 using Microsoft.AspNetCore.Mvc;
+using BlogApp.Data.Abstract;
 
 namespace BlogApp.WebUI.Controllers
 {
     public class HomeController : Controller
     {
         private IBlogRepository blogRepository;
-        public HomeController(IBlogRepository blogRepository)
+
+        public HomeController(IBlogRepository repository)
         {
-            this.blogRepository = blogRepository;
+            blogRepository = repository;
         }
+
         public IActionResult Index()
         {
-            return View(blogRepository.GetAll());
+            return View(blogRepository.GetAll().Where(i=>i.isApproved && i.isHome));
         }
+
         public IActionResult List()
         {
             return View();
         }
+
         public IActionResult Details()
         {
             return View();
